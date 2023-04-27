@@ -1,14 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SingleProduct = ({ product }) => {
-    const {imageUrl, name, price, rating, brandName} = product;
+    const {id, imageUrl, name, price, rating, brandName} = product;
+    const navigate = useNavigate()
+    const handlerDetails = () => {
+      navigate(`/product/${id}`)
+    }
   return (
-    <div>
+    <div className="cursor-pointer" onClick={handlerDetails}>
       <div className="card w-full bg-base-100 border-2">
         <figure className="object-cover h-52">
           <img
             src={`https://${imageUrl}`}
             alt="Shoes"
+            className="w-full"
           />
         </figure>
         <div className="card-body">
