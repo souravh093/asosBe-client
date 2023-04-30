@@ -46,6 +46,7 @@ const ProductDetails = () => {
       </div>
       <div>
         <h2 className="text-3xl font-semibold mb-5">{name}</h2>
+        <h2 className="text-xl font-bold">Brand name: {brandName}</h2>
         <div className="my-3">
           <div className="flex gap-20 items-center mt-2">
             <div className="border-4 px-2 py-1 border-green-400 font-bold rounded-lg">
