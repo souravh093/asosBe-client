@@ -1,11 +1,46 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { RootContext } from "../../Provider/Provider";
 
 function Register() {
+  const { createUser, updateUser } = useContext(RootContext);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const form = event.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const confirmPassword = form.confirmPassword.value;
+    setError("");
+    setSuccess("");
+    if (password !== confirmPassword) {
+      setError("Password does not match");
+      return;
+    }
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)) {
+      setError("Please enter strong password");
+      return;
+    }
+
+    createUser(email, password)
+      .then((result) => {
+        const registeredUser = result.user;
+        console.log(registeredUser);
+        setSuccess("Register Successfully");
+        updateUser(name)
+          .then(() => {
+            console.log("profile update");
+          })
+          .catch((error) => {
+            setError(error.message);
+          });
+          form.reset()
+      })
+      .catch((error) => setError(error.message));
   };
 
   const toggleShowPassword = () => {
@@ -29,7 +64,7 @@ function Register() {
               </label>
               <input
                 id="Name"
-                name="firstName"
+                name="name"
                 type="text"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -111,7 +146,6 @@ function Register() {
               </div>
             </div>
 
-
             <div>
               <label htmlFor="confirmPassword" className="sr-only">
                 Confirm Password
@@ -151,13 +185,20 @@ function Register() {
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
-                Sign in
+                Sign up
               </button>
             </div>
           </form>
           <div className="mt-2">
-            <p>Already have an account please <Link className="text-blue-500" to="/login">Login</Link></p>
+            <p>
+              Already have an account please{" "}
+              <Link className="text-blue-500" to="/login">
+                Login
+              </Link>
+            </p>
           </div>
+          <p className="text-red-500 mt-3">{error}</p>
+          <p className="text-blue-500 mt-3">{success}</p>
         </div>
       </div>
     </div>

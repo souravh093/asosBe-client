@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { RootContext } from "../../Provider/Provider";
+import { Result } from "postcss";
 
 const Login = () => {
-    const [showPassword, setShowPassword] = useState(false)
+  const { loginUser } = useContext(RootContext);
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    loginUser(email, password)
+        .then(result => {
+            const loggedUser = result.user;
+            console.log(loggedUser)
+            setSuccess("Login SuccessFully")
+        }).catch(error => setError(error.message))
   };
 
   const handleShowPasswordToggle = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
@@ -149,6 +165,8 @@ const Login = () => {
             </button>
           </div>
         </form>
+        <p className="text-red-500 mt-3">{error}</p>
+        <p className="text-blue-500 mt-3">{success}</p>
       </div>
     </div>
   );
