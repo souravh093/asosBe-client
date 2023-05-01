@@ -4,7 +4,11 @@ import { FaSearch, FaShoppingCart, FaUserAlt } from "react-icons/fa";
 import { RootContext } from "../../Provider/Provider";
 
 const Header = () => {
-  const { user } = useContext(RootContext);
+  const { user, logOutUser } = useContext(RootContext);
+
+  const handleLogout = () => {
+    logOutUser()
+  }
   return (
     <div className="flex justify-between bg-gray-50 items-center py-5 max-w-7xl mx-auto">
       <div className="flex items-center">
@@ -21,8 +25,9 @@ const Header = () => {
         <FaSearch className="text-xl" />
         {user ? (
           <div className="flex items-center gap-2">
+            <h2>{user.displayName}</h2>
             <FaUserAlt className="text-xl" />
-            <button className="bg-gray-700 text-white py-2 px-3 rounded-md">
+            <button onClick={handleLogout} className="bg-gray-700 text-white py-2 px-3 rounded-md">
               Logout
             </button>
           </div>
@@ -36,12 +41,12 @@ const Header = () => {
             </Link>
           </div>
         )}
-        <div className="relative">
+        <Link to="/cart" className="relative">
           <FaShoppingCart className="text-xl" />
           <div className="absolute bottom-2 bg-blue-400 text-white flex items-center justify-center rounded-full p-3 w-4 h-4 right-0 left-3">
             3
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );

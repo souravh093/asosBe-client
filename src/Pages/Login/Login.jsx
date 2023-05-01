@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { RootContext } from "../../Provider/Provider";
-import { Result } from "postcss";
 
 const Login = () => {
   const { loginUser } = useContext(RootContext);
@@ -9,6 +8,12 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
+  const from = location.state.from.pathname || '/'
+  console.log(from)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -21,6 +26,8 @@ const Login = () => {
             const loggedUser = result.user;
             console.log(loggedUser)
             setSuccess("Login SuccessFully")
+            form.reset();
+            navigate(from, {replace: true})
         }).catch(error => setError(error.message))
   };
 

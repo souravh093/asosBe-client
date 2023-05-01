@@ -3,7 +3,9 @@ import loadData from "../../utilities/LoadData/LoadData";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from "firebase/auth";
 import app from "../Firebase/firebase.config";
@@ -29,6 +31,19 @@ const Provider = ({ children }) => {
     })
   };
 
+  const logOutUser = () => {
+    return signOut(auth)
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (loginUser) => {
+      setUser(loginUser)
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await loadData();
@@ -43,6 +58,7 @@ const Provider = ({ children }) => {
     createUser,
     loginUser,
     updateUser,
+    logOutUser,
   };
 
   return (
